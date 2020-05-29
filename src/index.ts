@@ -7,6 +7,13 @@ class Block {
   public data: string;
   public timestamp: number;
 
+  static validateStructure = (aBlock: Block): boolean =>
+    typeof aBlock.index === "number" &&
+    typeof aBlock.hash === "string" &&
+    typeof aBlock.previousHash === "string" &&
+    typeof aBlock.data === "string" &&
+    typeof aBlock.timestamp === "number";
+
   static calculateBlockHash = (
     index: number,
     previousHash: string,
@@ -57,6 +64,14 @@ const createNewBlock = (data: string): Block => {
   return newBlock;
 };
 
-console.log(createNewBlock("hi"));
+const isBlockValid = (candidateBlock: Block, previousBlock: Block): boolean => {
+  if (!Block.validateStructure(candidateBlock)) {
+    return false;
+  } else if (previousBlock.index + 1 !== candidateBlock.index) {
+    return false;
+  } else if (previousBlock.hash !== candidateBlock.previousHash) {
+    return false;
+  }
+};
 
 export {};
